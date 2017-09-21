@@ -37,9 +37,12 @@ Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 
 $ModulesNames = @('PackageManagement', 
                     'PowerShellGet', 
+                    'xComputerManagement', 
+                    'xNetworking', 
                     'xPSDesiredStateConfiguration', 
                     'xRemoteDesktopAdmin', 
-                    'xSystemSecurity')
+                    'xSystemSecurity',
+                    'PolicyFileEditor')
 
 $ModulesNames | ForEach {
     Write-Host "Installing Package $_" -f Cyan
