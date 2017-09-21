@@ -33,9 +33,6 @@ param
 ## Default Values ##
 ####################
 ## Install PowerShell Modules ##
-Write-Host "Install Nuget Package Provider" -f Cyan
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-
 $ModulesNames = @('PackageManagement', 
                 'PowerShellGet', 
                 'xComputerManagement', 
