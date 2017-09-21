@@ -35,7 +35,6 @@ param
 ## Install PowerShell Modules ##
 $ModulesNames = @('PackageManagement', 
                     'PowerShellGet', 
-                    'SoftwareInstallManager', 
                     'xComputerManagement', 
                     'xNetworking', 
                     'xPSDesiredStateConfiguration', 
