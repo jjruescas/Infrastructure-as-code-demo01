@@ -49,7 +49,6 @@ $ModulesNames | ForEach {
     Write-Host "Installing Package $_" -f Cyan
     Install-Module -Name $_ -Force
 }
-}
 
 ## DSCAPCServer Configuration ##
 $configData = @{
