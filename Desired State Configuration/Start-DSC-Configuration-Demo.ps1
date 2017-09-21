@@ -24,7 +24,6 @@ param
 ####################
 ## Imports ##
 ####################
-Import-Module .\Abila-PS-Modules\Abila-Common-Functions.psm1
 
 ####################
 ## Functions ##
@@ -34,7 +33,20 @@ Import-Module .\Abila-PS-Modules\Abila-Common-Functions.psm1
 ## Default Values ##
 ####################
 ## Install PowerShell Modules ##
-Install-PackageProviderAndModules
+$ModulesNames = @('PackageManagement', 
+                    'PowerShellGet', 
+                    'SoftwareInstallManager', 
+                    'xComputerManagement', 
+                    'xNetworking', 
+                    'xPSDesiredStateConfiguration', 
+                    'xRemoteDesktopAdmin', 
+                    'xSystemSecurity',
+                    'PolicyFileEditor')
+
+$ModulesNames | ForEach {
+    Write-Host "Installing Package $_" -f Cyan
+    Install-Module -Name $_ -Force
+}
 
 ## DSCAPCServer Configuration ##
 $configData = @{
