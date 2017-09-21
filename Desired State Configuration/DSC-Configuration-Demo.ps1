@@ -5,14 +5,29 @@ Configuration DscMainConfig
         [string]$NodeName = $ENV:computername
     )
   
-    Import-DscResource -Module xComputerManagement
-    Import-DscResource -Module xRemoteDesktopAdmin
-    Import-DSCResource -Module xSystemSecurity
-    Import-DscResource -Module xPSDesiredStateConfiguration
-  	Import-DscResource -Module PSDesiredStateConfiguration
+    Import-DscResource -Module PSDesiredStateConfiguration
 	
 	Node $NodeName
 	{
+        WindowsFeature IIS {
+            Ensure = "Present"
+            Name = "Web-Server"
+        }
+        WindowsFeature IISManagementTools
+        {
+            Ensure = "Present"
+            Name = "Web-Mgmt-Tools"
+            DependsOn='[WindowsFeature]IIS'
+        }
+
+        
+        <# ############ More PRO Configuration ############
+        Import-DscResource -Module xComputerManagement 
+        Import-DscResource -Module xRemoteDesktopAdmin 
+        Import-DSCResource -Module xSystemSecurity 
+        Import-DscResource -Module xPSDesiredStateConfiguration 
+        Import-DscResource -Module PSDesiredStateConfiguration 
+
         xUAC DisableUAC
         {
             Setting = "NeverNotifyAndDisableAll"
@@ -220,5 +235,6 @@ Configuration DscMainConfig
             Ensure = "Present"
             Name = "Web-Windows-Auth"
         }
+        #>
 	}	
 }
