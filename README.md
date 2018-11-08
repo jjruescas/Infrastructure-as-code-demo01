@@ -28,10 +28,10 @@ _**Note**: You can run this example using a t2.micro instance, but it may take a
 2. In terraform.tfvars update the followin variables with your own values: AWS_ACCESS_KEY, AWS_SECRET_KEY, REGION, AVAILABILITY_ZONE, AMI_ID. Optionally you can also customize INSTANCE_TYPE, VM_NAME, INSTANCE_USERNAME and INSTANCE_PASSWORD.
 3. In a commad line run this only the first time:<br>
 `> terraform init`
-4. Run this to start the provisioning of your Infrastructure:<br>
+4. Run this to start the provisioning and configuration of your infrastructure:<br>
 `> terrafrom apply`
 
-...voilà! That's it!
+...voilà! That's it!<br>
 Wait until terraform finishes doing its magic and you'll see in the Console an Output Variable called "web_server_address". Browse to that location and that means you have a Windows IIS WebServer ready to go.
 
 
