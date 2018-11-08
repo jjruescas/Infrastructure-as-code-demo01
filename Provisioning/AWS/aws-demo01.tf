@@ -25,32 +25,37 @@ resource "aws_instance" "web-server" {
   # security group
   vpc_security_group_ids = ["${aws_security_group.allow-http-rdp-winrm.id}"]
 
-	tags {
-		Name = "${var.VM_NAME}"
-	}
+	connection {
+    type = "winrm"
+    timeout = "30m"
+    user = "${var.INSTANCE_USERNAME}"
+    password = "${var.INSTANCE_PASSWORD}"
+  }
 
   user_data = <<EOF
-<powershell>
-net user ${var.INSTANCE_USERNAME} '${var.INSTANCE_PASSWORD}' /add /y
-net localgroup administrators ${var.INSTANCE_USERNAME} /add
-winrm quickconfig -q
-winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="300"}'
-winrm set winrm/config '@{MaxTimeoutms="1800000"}'
-winrm set winrm/config/service '@{AllowUnencrypted="true"}'
-winrm set winrm/config/service/auth '@{Basic="true"}'
-netsh advfirewall firewall add rule name="WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
-netsh advfirewall firewall add rule name="WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
-net stop winrm
-sc.exe config winrm start=auto
-net start winrm
-</powershell>
-EOF
+    <powershell>
+    net user ${var.INSTANCE_USERNAME} '${var.INSTANCE_PASSWORD}' /add /y
+    net localgroup administrators ${var.INSTANCE_USERNAME} /add
+    winrm quickconfig -q
+    winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="300"}'
+    winrm set winrm/config '@{MaxTimeoutms="1800000"}'
+    winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+    winrm set winrm/config/service/auth '@{Basic="true"}'
+    netsh advfirewall firewall add rule name="WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
+    netsh advfirewall firewall add rule name="WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
+    net stop winrm
+    sc.exe config winrm start=auto
+    net start winrm
+    </powershell>
+  EOF
 
+  # Move Chocolatey Configuration File
   provisioner "file" {
-    source = "../Configuration/configuration.ps1"
+    source = "../Configuration/Chocolatey/configuration.ps1"
     destination = "C:/temp/configuration.ps1"
   }
 
+  # Execute Chocolatey Configuration
 	provisioner "remote-exec" {
 		inline = [
       "powershell.exe -File C:\\temp\\configuration.ps1"
@@ -59,7 +64,7 @@ EOF
 
 	# Move DSC Files
 	provisioner "file" {
-    source = "DSC/"
+    source = "../Configuration/DSC/"
     destination = "C:/temp"
   }
 
@@ -70,10 +75,15 @@ EOF
     ]
   }
 
-  connection {
-    type = "winrm"
-    timeout = "10m"
-    user = "${var.INSTANCE_USERNAME}"
-    password = "${var.INSTANCE_PASSWORD}"
-  }
+  tags {
+		Name = "${var.VM_NAME}"
+	}
+}
+
+output "public_ip" {
+  value = "${aws_instance.web-server.public_ip}"
+}
+
+output "web_server_address" {
+  value = "http://${aws_instance.web-server.public_ip}"
 }
