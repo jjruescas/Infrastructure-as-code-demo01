@@ -14,7 +14,7 @@ This demo uses:
 * [Desired State Configuration](https://docs.microsoft.com/en-us/powershell/dsc/overview)
 * [Chocolatey](https://chocolatey.org/)
 
-_**Note**: You can run this example using a t2.micro instance, but it may take about an hour to execute all the configurations._
+_**Note**: You can run this example using a t2.micro (Free Tier) instance, but it may take about an hour to execute all the configurations. If can use a payed EC2 instance with more resources (e.g.: t2.large) to provision this example quickly._
 
 ## What you'll need
 
