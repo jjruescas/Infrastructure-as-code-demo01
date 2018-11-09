@@ -25,7 +25,7 @@ _**Note**: You can run this example using a t2.micro (Free Tier) instance, but i
 
 ## Let's do this!
 1. Download this project in your local computer (or clone it if you have Git).
-2. In terraform.tfvars update the followin variables with your own values: AWS_ACCESS_KEY, AWS_SECRET_KEY, REGION, AVAILABILITY_ZONE, AMI_ID. Optionally you can also customize INSTANCE_TYPE, VM_NAME, INSTANCE_USERNAME and INSTANCE_PASSWORD.
+2. In [terraform.tfvars](https://github.com/jjruescas/Infrastructure-as-code-demo01/blob/master/Terraform-AWS/terraform.tfvars) update the followin variables with your own values: AWS_ACCESS_KEY, AWS_SECRET_KEY, REGION, AVAILABILITY_ZONE, AMI_ID. Optionally you can also customize INSTANCE_TYPE, VM_NAME, INSTANCE_USERNAME and INSTANCE_PASSWORD.
 3. In a commad line run this only the first time:<br>
 `> terraform init`
 4. Run this to start the provisioning and configuration of your infrastructure:<br>
