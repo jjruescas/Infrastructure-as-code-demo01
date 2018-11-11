@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "web-server" {
-  ami = "${var.AMI_ID}"
+  ami = "${data.aws_ami.windows_ami.id}"
   instance_type = "${var.INSTANCE_TYPE}"
 
 	# VPC subnet
@@ -27,7 +27,7 @@ resource "aws_instance" "web-server" {
 
 	connection {
     type = "winrm"
-    timeout = "30m"
+    timeout = "180m"
     user = "${var.INSTANCE_USERNAME}"
     password = "${var.INSTANCE_PASSWORD}"
   }
@@ -49,6 +49,19 @@ resource "aws_instance" "web-server" {
     </powershell>
   EOF
 
+# Move DSC Files
+	provisioner "file" {
+    source = "../Configuration/DSC/"
+    destination = "C:/temp"
+  }
+
+	# Execute Powershell DSC
+	provisioner "remote-exec" {
+    inline = [
+      "powershell.exe -File C:\\temp\\Start-DSC-Configuration-Demo.ps1"
+    ]
+  }
+
   # Move Chocolatey Configuration File
   provisioner "file" {
     source = "../Configuration/Chocolatey/configuration.ps1"
@@ -62,18 +75,7 @@ resource "aws_instance" "web-server" {
     ]
   }
 
-	# Move DSC Files
-	provisioner "file" {
-    source = "../Configuration/DSC/"
-    destination = "C:/temp"
-  }
-
-	# Execute Powershell DSC
-	provisioner "remote-exec" {
-    inline = [
-      "powershell.exe -File C:\\temp\\Start-DSC-Configuration-Demo.ps1"
-    ]
-  }
+	
 
   tags {
 		Name = "${var.VM_NAME}"

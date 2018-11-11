@@ -5,7 +5,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.We
 choco install git.install -y
 
 #Install Notepadpluplus
-choco install notepadplusplus -y
+#choco install notepadplusplus -y
 
 #Install Google Chrome
-choco install googlechrome -y
+#choco install googlechrome -y

@@ -1,0 +1,6 @@
+
+Terraform-AWS/\.terraform/plugins/darwin_amd64/
+
+*.tfstate
+
+*.backup
