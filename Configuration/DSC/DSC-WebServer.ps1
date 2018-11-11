@@ -1,4 +1,4 @@
-Configuration DscMainConfig 
+Configuration DscWebServer 
 {
     param
     (
@@ -21,7 +21,7 @@ Configuration DscMainConfig
         }
 
         
-        <# ############ More PRO Configuration ############
+        <# ############ Additional Configurations ############
         Import-DscResource -Module xComputerManagement 
         Import-DscResource -Module xRemoteDesktopAdmin 
         Import-DSCResource -Module xSystemSecurity 

@@ -10,12 +10,13 @@ $ModulesNames = @('PackageManagement',
                 'xSystemSecurity',
                 'PolicyFileEditor')
 
+# Install Powershell Modules
 $ModulesNames | ForEach {
     Write-Host "Installing Package $_" -f Cyan
     Install-Module -Name $_ -Force
 }
 
-## DSCAPCServer Configuration ##
+## DSC Web Server Configuration ##
 $configData = @{
 AllNodes = @(
   @{ 
@@ -24,10 +25,9 @@ AllNodes = @(
   })
 }
 
-ls
-.  $PSScriptRoot\DSC-Configuration-Demo.ps1
+.  $PSScriptRoot\DSC-WebServer.ps1
 
-Write-Host "Executing DscMainConfig Configuration..." -f Cyan
-DscMainConfig -configurationdata $configData
-Start-DscConfiguration -Wait -Verbose -Path .\DscMainConfig  -force
+Write-Host "Executing DscWebServer Configuration..." -f Cyan
+DscWebServer -configurationdata $configData
+Start-DscConfiguration -Wait -Verbose -Path .\DscWebServer  -force
 

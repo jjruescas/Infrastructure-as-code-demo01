@@ -8,6 +8,6 @@ data "aws_ami" "windows_ami" {
 
     filter {
         name   = "name"
-        values = ["Windows_Server-2016-English-Full-Base*"]
+        values = ["${var.AMI_EXPRESSION_NAME}"]
     }
 }

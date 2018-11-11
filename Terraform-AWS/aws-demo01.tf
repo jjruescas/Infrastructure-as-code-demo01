@@ -1,13 +1,13 @@
 #aws.tf
 variable "AWS_ACCESS_KEY" {}
 variable "AWS_SECRET_KEY" {}
-variable "VM_NAME" {}
-variable "INSTANCE_USERNAME" {}
-variable "INSTANCE_PASSWORD" {}
-variable "AMI_ID" {}
 variable "REGION" {}
 variable "AVAILABILITY_ZONE" {}
 variable "INSTANCE_TYPE" {}
+variable "AMI_EXPRESSION_NAME" {}
+variable "VM_NAME" {}
+variable "INSTANCE_USERNAME" {}
+variable "INSTANCE_PASSWORD" {}
 
 provider "aws" {
 	region = "${var.REGION}"
@@ -16,22 +16,32 @@ provider "aws" {
 }
 
 resource "aws_instance" "web-server" {
+  
+  # AMI ID obtained using "data.aws_ami"
   ami = "${data.aws_ami.windows_ami.id}"
+  
   instance_type = "${var.INSTANCE_TYPE}"
 
-	# VPC subnet
+	#V PC Subnet
   subnet_id = "${aws_subnet.main-public.id}"
 
-  # security group
+  # Security Group
   vpc_security_group_ids = ["${aws_security_group.allow-http-rdp-winrm.id}"]
 
-	connection {
+	tags {
+		Name = "${var.VM_NAME}"
+	}
+
+  ########### Windows OS Configuration
+  # WinRM connection
+  connection {
     type = "winrm"
     timeout = "180m"
     user = "${var.INSTANCE_USERNAME}"
     password = "${var.INSTANCE_PASSWORD}"
   }
 
+  # Windows Admininistrator User Credentials
   user_data = <<EOF
     <powershell>
     net user ${var.INSTANCE_USERNAME} '${var.INSTANCE_PASSWORD}' /add /y
@@ -49,7 +59,8 @@ resource "aws_instance" "web-server" {
     </powershell>
   EOF
 
-# Move DSC Files
+  ########## Web Server Configuration
+  # Move DSC Files
 	provisioner "file" {
     source = "../Configuration/DSC/"
     destination = "C:/temp"
@@ -58,10 +69,11 @@ resource "aws_instance" "web-server" {
 	# Execute Powershell DSC
 	provisioner "remote-exec" {
     inline = [
-      "powershell.exe -File C:\\temp\\Start-DSC-Configuration-Demo.ps1"
+      "powershell.exe -File C:\\temp\\Start-DSC-WebServer.ps1"
     ]
   }
 
+  ########## Additional Software Configuration
   # Move Chocolatey Configuration File
   provisioner "file" {
     source = "../Configuration/Chocolatey/configuration.ps1"
@@ -74,12 +86,6 @@ resource "aws_instance" "web-server" {
       "powershell.exe -File C:\\temp\\configuration.ps1"
     ]
   }
-
-	
-
-  tags {
-		Name = "${var.VM_NAME}"
-	}
 }
 
 output "public_ip" {
